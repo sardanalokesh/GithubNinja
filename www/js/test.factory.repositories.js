@@ -4,8 +4,8 @@ describe('factory.repositories test', function() {
 	var repositoriesService, httpBackend, rootScope;
 
   	beforeEach(module('ghtrending.services'));
-  	beforeEach(inject(function(_repositories_, $httpBackend, $rootScope) {
-  		repositoriesService = _repositories_;
+  	beforeEach(inject(function(_repositoriesService_, $httpBackend, $rootScope) {
+  		repositoriesService = _repositoriesService_;
   		httpBackend = $httpBackend;
   		rootScope = $rootScope;
   	}));

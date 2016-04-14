@@ -1,4 +1,4 @@
-angular.module('ghtrending', ['ionic', 'ghtrending.controllers', 'ghtrending.services'])
+angular.module('ghtrending', ['ionic', 'ngCordova','ghtrending.controllers', 'ghtrending.services', 'ghtrending.directives'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -16,63 +16,57 @@ angular.module('ghtrending', ['ionic', 'ghtrending.controllers', 'ghtrending.ser
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $sceDelegateProvider) {
 
-  // Ionic uses AngularUI Router which uses the concept of states
-  // Learn more here: https://github.com/angular-ui/ui-router
-  // Set up the various states which the app can be in.
-  // Each state's controller can be found in controllers.js
   $stateProvider
 
   // setup an abstract state for the tabs directive
     .state('tab', {
     url: '/tab',
     abstract: true,
-    templateUrl: 'templates/tabs.html'
+    templateUrl: 'templates/tabs.html',
+    controller: 'TabsCtrl'
   })
 
   // Each tab has its own nav history stack:
 
-  .state('tab.dash', {
-    url: '/dash',
+  .state('tab.weekly', {
+    url: '/weekly',
     views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
+      'tab-weekly': {
+        templateUrl: 'templates/tab-weekly.html'
       }
     }
   })
 
-  .state('tab.chats', {
-      url: '/chats',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
-        }
-      }
-    })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
-        }
-      }
-    })
-
-  .state('tab.account', {
-    url: '/account',
+  .state('tab.monthly', {
+    url: '/monthly',
     views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
+      'tab-monthly': {
+        templateUrl: 'templates/tab-monthly.html'
+      }
+    }
+  })
+
+  .state('tab.yearly', {
+    url: '/yearly',
+    views: {
+      'tab-yearly': {
+        templateUrl: 'templates/tab-yearly.html'
+      }
+    }
+  })
+
+  .state('tab.overall', {
+    url: '/overall',
+    views: {
+      'tab-overall': {
+        templateUrl: 'templates/tab-overall.html'
       }
     }
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
+  $urlRouterProvider.otherwise('/tab/weekly');
 
 });

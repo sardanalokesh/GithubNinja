@@ -1,0 +1,13 @@
+<ion-content>
+  <div class="list">
+    <a ng-repeat="repo in repositories" class="item item-thumbnail-left" ng-click="openRepository(repo.html_url)">
+      <img src="{{repo.owner.avatar_url}}">
+      <h2>{{repo.full_name}}</h2>
+      <p>{{repo.description}}</p>
+      <p>
+        <span style="margin-right:10px;">{{repo.stargazers_count}} stars</span>
+        <span>{{repo.forks_count}} forks</span>
+      </p>
+    </a>
+  </div>
+</ion-content>

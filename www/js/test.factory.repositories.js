@@ -1,27 +1,35 @@
 'use strict';
 
 describe('factory.repositories test', function() {
-	var repositoriesService, httpBackend, rootScope;
+	var repositoriesService, httpBackend;
 
   	beforeEach(module('ghtrending.services'));
-  	beforeEach(inject(function(_repositoriesService_, $httpBackend, $rootScope) {
-  		repositoriesService = _repositoriesService_;
-  		httpBackend = $httpBackend;
-  		rootScope = $rootScope;
-  	}));
+  	beforeEach(function() {
+  		repositoriesService = UnitTestHelper.getService("repositoriesService");
+  		httpBackend = UnitTestHelper.getService("$httpBackend");
+  		UnitTestHelper.loadBackendForOverAll();
+  		UnitTestHelper.loadBackendForMonthly();
+  	});
 
-	it('test getPopularRepositories', function() {
-		var resultCount = 0;
-		httpBackend.whenGET(/api\.github\.com\/search\/repositories\?(.+)/)
-			.respond({
-				total_count: 5
-			});
+	it('test getPopularRepositories for weekly', function() {
+		var queryType = "";
 		repositoriesService.getPopularRepositories("weekly")
 			.then(function(data) {
-				resultCount = data.total_count;
+				queryType = data.query_type;
 			});
 			httpBackend.flush();
-			expect(resultCount).toBeGreaterThan(0);
+			expect(queryType).toEqual("created");
+			
+	});
+
+	it('test getPopularRepositories for overall', function() {
+		var queryType = "";
+		repositoriesService.getPopularRepositories("overall")
+			.then(function(data) {
+				queryType = data.query_type;
+			});
+			httpBackend.flush();
+			expect(queryType).toEqual("pushed");
 			
 	});
 

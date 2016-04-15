@@ -1,16 +1,26 @@
 module.exports = function(config){
   config.set({
 
+    preprocessors: {
+      'www/templates/*.html': ['ng-html2js']
+    },
+
     basePath : './',
 
     files : [
       'www/lib/ionic/js/ionic.bundle.js',
       'www/lib/angular-mocks/angular-mocks.js',
+      'www/lib/ngCordova/dist/ng-cordova.js',
       'www/js/app.js',
-      'www/js/services/services.js',
-      'www/js/services/factory.repositories.js',
-      'www/js/**/*.js'
+      'www/js/services.js',
+      'www/js/**/*.js',
+      'www/templates/*.html'
     ],
+
+    ngHtml2JsPreprocessor: {
+
+      stripPrefix: 'www/',
+    },
 
     autoWatch : true,
 
@@ -20,9 +30,8 @@ module.exports = function(config){
 
     plugins : [
             'karma-chrome-launcher',
-            'karma-firefox-launcher',
             'karma-jasmine',
-            'karma-junit-reporter'
+            'karma-ng-html2js-preprocessor'
             ],
 
     junitReporter : {

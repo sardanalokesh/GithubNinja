@@ -1,5 +1,6 @@
 angular.module('ghtrending.directives', [])
-	.directive('repositoryList', ["repositoriesService", "repositoriesData", "$cordovaInAppBrowser", function(repositoriesService, repositoriesData, $cordovaInAppBrowser) {
+	.directive('repositoryList', ["repositoriesService", "repositoriesData", "$cordovaInAppBrowser", "loadMask", "$rootScope",
+		function(repositoriesService, repositoriesData, $cordovaInAppBrowser, loadMask, $rootScope) {
 		return {
 			restrict: "E",
 			templateUrl: "templates/repository-list.html",
@@ -7,13 +8,15 @@ angular.module('ghtrending.directives', [])
 				timeScale: "@"
 			},
 			controller: function($scope) {
-				repositoriesService.getPopularRepositories($scope.timeScale).then(function(data) {
-			          repositoriesData.setRepositoriesData(data);
-			          if (repositoriesData.getRepositoriesCount() > 0)
-			            $scope.repositories = repositoriesData.getRepositoriesDetails();
-			          else
-			            $scope.repositories = [];
-			      });
+				function fetchData() {
+					repositoriesService.getPopularRepositories($scope.timeScale).then(function(data) {
+				          repositoriesData.setRepositoriesData(data);
+				          if (repositoriesData.getRepositoriesCount() > 0)
+				            $scope.repositories = repositoriesData.getRepositoriesDetails();
+				          else
+				            $scope.repositories = [];
+				      });
+				}
 
 				$scope.openRepository = function(url) {
 			          var options = {
@@ -26,7 +29,19 @@ angular.module('ghtrending.directives', [])
 			          }).catch(function(e) {
 			              console.error("Error opening URL " + url + " : " + e);
 			          });
+			          /*$rootScope.$on('$cordovaInAppBrowser:loadstart', function(e, event) {
+			          		loadstart.show();
+			          });
+			          $rootScope.$on('$cordovaInAppBrowser:loadstop', function(e, event) {
+			          		loadstart.hide();
+			          });*/
 			      };
+
+			      $scope.refreshList = function() {
+			      		fetchData();
+			      };
+
+			      fetchData();
 			},
 			link: function(scope, elem, attr, ctrl) {
 

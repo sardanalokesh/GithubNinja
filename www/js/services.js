@@ -1,5 +1,5 @@
 angular.module('ghtrending.services', [])
-	.factory('repositoriesService', function($q, $http) {
+	.factory('repositoriesService', ["$q", "$http", "loadMask", function($q, $http, loadMask) {
 
 	    var ROOT_API = "https://api.github.com";
 	    var REPO_SEARCH = ROOT_API + "/search/repositories";
@@ -17,17 +17,22 @@ angular.module('ghtrending.services', [])
 	            if (data) {
 	                deffered.resolve(data);
 	            } else {
-
+	            	deffered.reject("No data");
 	            }
 	        }).error(function(error) {
 	            deffered.reject(error);
+	        });
+	        deffered.promise.then(function() {
+	        	loadMask.hide();
+	        }).catch(function() {
+	        	loadMask.hide();
 	        });
 	        return deffered.promise;
 	    }
 
 	    return {
 	        getPopularRepositories: function(timeScale) {
-	        	console.log(timeScale);
+	        	loadMask.show();
 	            var url = REPO_SEARCH;
 	            var searchDate = new Date();
 	            var query;
@@ -47,7 +52,7 @@ angular.module('ghtrending.services', [])
 	            return processAjaxRequest(url);
 	        }
 	    };
-	})
+	}])
 
 	.service('repositoriesData', function() {
 		var repoDetails = [];
@@ -73,7 +78,19 @@ angular.module('ghtrending.services', [])
 			}
 			return {};
 		};
-	});
+	})
+
+	.service('loadMask', ["$ionicLoading", function($ionicLoading) {
+		this.show = function() {
+			$ionicLoading.show({
+		      template: '<ion-spinner class="spinner-dark"></ion-spinner>'
+		    });
+		};
+
+		this.hide = function() {
+			$ionicLoading.hide();
+		};
+	}]);
 
 
 ;

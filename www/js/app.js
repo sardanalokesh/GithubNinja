@@ -1,6 +1,6 @@
 angular.module('ghtrending', ['ionic', 'ngCordova','ghtrending.controllers', 'ghtrending.services', 'ghtrending.directives'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $ionicPopup) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -13,6 +13,17 @@ angular.module('ghtrending', ['ionic', 'ngCordova','ghtrending.controllers', 'gh
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+    //exit app on back button
+    $ionicPlatform.onHardwareBackButton(function () {
+        $ionicPopup.confirm({
+          title: 'System warning',
+          template: 'are you sure you want to exit?'
+        }).then(function(res){
+          if( res ){
+            navigator.app.exitApp();
+          }
+        });
+    });
   });
 })
 
@@ -20,17 +31,29 @@ angular.module('ghtrending', ['ionic', 'ngCordova','ghtrending.controllers', 'gh
 
   $stateProvider
 
+
+  .state('app', {
+    url: '/app',
+    abstract: true,
+    templateUrl: 'templates/menu.html',
+    controller: 'AppCtrl'
+  })
+
   // setup an abstract state for the tabs directive
-    .state('tab', {
+    .state('app.tab', {
     url: '/tab',
     abstract: true,
-    templateUrl: 'templates/tabs.html',
-    controller: 'TabsCtrl'
+    views: {
+      'menu-content': {
+        templateUrl: 'templates/tabs.html',
+        controller: 'TabsCtrl'
+      }
+    }
   })
 
   // Each tab has its own nav history stack:
 
-  .state('tab.weekly', {
+  .state('app.tab.weekly', {
     url: '/weekly',
     views: {
       'tab-weekly': {
@@ -39,7 +62,7 @@ angular.module('ghtrending', ['ionic', 'ngCordova','ghtrending.controllers', 'gh
     }
   })
 
-  .state('tab.monthly', {
+  .state('app.tab.monthly', {
     url: '/monthly',
     views: {
       'tab-monthly': {
@@ -48,7 +71,7 @@ angular.module('ghtrending', ['ionic', 'ngCordova','ghtrending.controllers', 'gh
     }
   })
 
-  .state('tab.yearly', {
+  .state('app.tab.yearly', {
     url: '/yearly',
     views: {
       'tab-yearly': {
@@ -57,7 +80,7 @@ angular.module('ghtrending', ['ionic', 'ngCordova','ghtrending.controllers', 'gh
     }
   })
 
-  .state('tab.overall', {
+  .state('app.tab.overall', {
     url: '/overall',
     views: {
       'tab-overall': {
@@ -67,6 +90,6 @@ angular.module('ghtrending', ['ionic', 'ngCordova','ghtrending.controllers', 'gh
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/weekly');
+  $urlRouterProvider.otherwise('/app/tab/weekly');
 
 });

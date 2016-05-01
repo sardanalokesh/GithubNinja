@@ -90,7 +90,55 @@ angular.module('ghtrending.services', [])
 		this.hide = function() {
 			$ionicLoading.hide();
 		};
+	}])
+
+	.service("favorites", [function() {
+
+		//initial local storage list if it does not exist already
+		if (!localStorage.getItem("favoriteRepos"))
+			localStorage.setItem("favoriteRepos", angular.toJson([]));
+
+		var favorites = getAll();
+
+		function getAll() {
+			var favoritesString = localStorage.getItem("favoriteRepos");
+			return angular.fromJson(favoritesString);
+		};
+
+		function save() {
+			var favoritesString = angular.toJson(favorites);
+			localStorage.setItem("favoriteRepos", favoritesString);
+		}
+
+		//get the complete list of all favorite repositories
+		this.getAll = getAll;
+
+		//add a repository in favorites
+		this.add = function(repoId) {
+			favorites.push(repoId);
+			save();
+		};
+
+		this.remove = function(repoId) {
+			var index = favorites.indexOf(repoId);
+			if (index != -1) {
+				favorites.splice(index, 1);
+				save();
+			}
+		};
+
 	}]);
+
+	/*.factory("utility", function() {
+		return {
+			arrayContains: function(array, item) {
+				for (var i in array) {
+					if (array[i] == item)
+
+				}
+			}
+		};
+	});*/
 
 
 ;

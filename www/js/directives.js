@@ -1,6 +1,6 @@
 angular.module('ghtrending.directives', [])
-	.directive('repositoryList', ["repositoriesService", "repositoriesData", "$cordovaInAppBrowser", "loadMask", "$rootScope",
-		function(repositoriesService, repositoriesData, $cordovaInAppBrowser, loadMask, $rootScope) {
+	.directive('repositoryList', ["repositoriesService", "repositoriesData", "$cordovaInAppBrowser", "loadMask", "$rootScope", "favorites",
+		function(repositoriesService, repositoriesData, $cordovaInAppBrowser, loadMask, $rootScope, favorites) {
 		return {
 			restrict: "E",
 			templateUrl: "templates/repository-list.html",
@@ -39,6 +39,27 @@ angular.module('ghtrending.directives', [])
 
 			      $scope.refreshList = function() {
 			      		fetchData();
+			      };
+
+			      $scope.isFavorite = function(repoId) {
+			      		$scope.favorites = favorites.getAll();
+			      		return ($scope.favorites.indexOf(repoId) != -1);
+			      };
+
+			      $scope.toggleFavorite = function(event, repoId) {
+			      		event.preventDefault();
+			      		event.stopPropagation();
+			      		if ($scope.isFavorite(repoId))
+			      			favorites.remove(repoId);
+			      		else
+			      			favorites.add(repoId);
+			      };
+
+			      $scope.getFavoriteIcon = function(repoId) {
+			      		if ($scope.isFavorite(repoId))
+			      			return "ion-ios-heart icon-assertive";
+			      		else
+			      			return "ion-ios-heart-outline";
 			      };
 
 			      fetchData();

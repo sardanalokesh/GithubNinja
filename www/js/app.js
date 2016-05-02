@@ -15,14 +15,7 @@ angular.module('ghtrending', ['ionic', 'ngCordova','ghtrending.controllers', 'gh
     }
     //exit app on back button
     $ionicPlatform.onHardwareBackButton(function () {
-        $ionicPopup.confirm({
-          title: 'System warning',
-          template: 'are you sure you want to exit?'
-        }).then(function(res){
-          if( res ){
-            navigator.app.exitApp();
-          }
-        });
+        navigator.app.exitApp();
     });
   });
 })
@@ -31,7 +24,6 @@ angular.module('ghtrending', ['ionic', 'ngCordova','ghtrending.controllers', 'gh
 
   $stateProvider
 
-
   .state('app', {
     url: '/app',
     abstract: true,
@@ -39,57 +31,67 @@ angular.module('ghtrending', ['ionic', 'ngCordova','ghtrending.controllers', 'gh
     controller: 'AppCtrl'
   })
 
-  // setup an abstract state for the tabs directive
-    .state('app.tab', {
-    url: '/tab',
+  .state('app.favorites', {
+    url: '/favorites',
+    views: {
+      'menu-content': {
+        templateUrl: 'templates/favorites.html',
+        controller: 'FavoritesCtrl'
+      }
+    }
+  })
+
+  // setup an abstract state for the home
+    .state('app.home', {
+    url: '/home',
     abstract: true,
     views: {
       'menu-content': {
-        templateUrl: 'templates/tabs.html',
-        controller: 'TabsCtrl'
+        templateUrl: 'templates/home.html',
+        controller: 'HomeCtrl'
       }
     }
   })
 
   // Each tab has its own nav history stack:
 
-  .state('app.tab.weekly', {
+  .state('app.home.weekly', {
     url: '/weekly',
     views: {
-      'tab-weekly': {
-        templateUrl: 'templates/tab-weekly.html'
+      'home-weekly': {
+        templateUrl: 'templates/home-weekly.html'
       }
     }
   })
 
-  .state('app.tab.monthly', {
+  .state('app.home.monthly', {
     url: '/monthly',
     views: {
-      'tab-monthly': {
-        templateUrl: 'templates/tab-monthly.html'
+      'home-monthly': {
+        templateUrl: 'templates/home-monthly.html'
       }
     }
   })
 
-  .state('app.tab.yearly', {
+  .state('app.home.yearly', {
     url: '/yearly',
     views: {
-      'tab-yearly': {
-        templateUrl: 'templates/tab-yearly.html'
+      'home-yearly': {
+        templateUrl: 'templates/home-yearly.html'
       }
     }
   })
 
-  .state('app.tab.overall', {
+  .state('app.home.overall', {
     url: '/overall',
     views: {
-      'tab-overall': {
-        templateUrl: 'templates/tab-overall.html'
+      'home-overall': {
+        templateUrl: 'templates/home-overall.html'
       }
     }
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/tab/weekly');
+  $urlRouterProvider.otherwise('/app/home/weekly');
 
 });

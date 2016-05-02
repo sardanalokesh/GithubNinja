@@ -96,9 +96,16 @@ angular.module('ghtrending.services', [])
 
 		//initial local storage list if it does not exist already
 		if (!localStorage.getItem("favoriteRepos"))
-			localStorage.setItem("favoriteRepos", angular.toJson([]));
+			localStorage.setItem("favoriteRepos", angular.toJson({}));
 
 		var favorites = getAll();
+		var observerCallbacks = [];
+
+		var notifyObservers = function() {
+		    angular.forEach(observerCallbacks, function(callback){
+		      callback();
+		    });
+		};
 
 		function getAll() {
 			var favoritesString = localStorage.getItem("favoriteRepos");
@@ -108,37 +115,46 @@ angular.module('ghtrending.services', [])
 		function save() {
 			var favoritesString = angular.toJson(favorites);
 			localStorage.setItem("favoriteRepos", favoritesString);
+			notifyObservers();
 		}
 
 		//get the complete list of all favorite repositories
-		this.getAll = getAll;
+		this.all = getAll;
 
 		//add a repository in favorites
-		this.add = function(repoId) {
-			favorites.push(repoId);
+		this.add = function(repo) {
+			var repoDetails = {
+				id: repo.id,
+				html_url: repo.html_url,
+				owner: {
+					avatar_url: repo.owner.avatar_url
+				},
+				full_name: repo.full_name,
+				description: repo.description,
+				stargazers_count: repo.stargazers_count,
+				forks_count: repo.forks_count,
+			};
+			favorites[repo.id] = repoDetails;
 			save();
 		};
 
-		this.remove = function(repoId) {
-			var index = favorites.indexOf(repoId);
-			if (index != -1) {
-				favorites.splice(index, 1);
+		this.contains = function(repo) {
+			return !!favorites[repo.id];
+		};
+
+		this.remove = function(repo) {
+			if (this.contains(repo)) {
+				delete favorites[repo.id];
 				save();
 			}
 		};
 
-	}]);
-
-	/*.factory("utility", function() {
-		return {
-			arrayContains: function(array, item) {
-				for (var i in array) {
-					if (array[i] == item)
-
-				}
-			}
+		this.registerObserver = function(callback){
+		    observerCallbacks.push(callback);
 		};
-	});*/
 
 
-;
+	}])
+
+
+	;

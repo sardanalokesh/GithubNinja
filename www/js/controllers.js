@@ -4,8 +4,8 @@ angular.module('ghtrending.controllers', [])
   .controller('AppCtrl', ["$scope", "$cordovaSocialSharing", function($scope, $cordovaSocialSharing) {
 
   	$scope.share = function() {
-  		var appUrl = "https://play.google.com/store/apps/details?id=com.tekchup.scrumcards";
-  		var message = "Hi, I would like you try this awesome app!";
+  		var appUrl = "https://play.google.com/store/apps/details?id=com.tekchup.ninjahub";
+  		var message = "Hi, I would like you to try this awesome app!";
   		var subject = "Hi";
   		$cordovaSocialSharing
 	    .share(message, subject, "", appUrl)
@@ -18,7 +18,15 @@ angular.module('ghtrending.controllers', [])
 
   }])
 
-  .controller('TabsCtrl', ["$ionicTabsDelegate", function($ionicTabsDelegate) {
-  }]);
+  .controller('HomeCtrl', ["$ionicTabsDelegate", function($ionicTabsDelegate) {
+  }])
+
+  .controller('FavoritesCtrl', ["$scope", "favorites", function($scope, favorites) {
+      $scope.favorites = favorites.all(); 
+      favorites.registerObserver(function() {
+          $scope.favorites = favorites.all();
+      });
+  }])
+;
 
 

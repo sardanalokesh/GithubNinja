@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.tekchup.githubninja" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>GitHub Ninja</name>
+<widget id="com.tekchup.ninjahub" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>NinjaHub</name>
   <description>
-        Your partner in 'git crime'.
+        Your partner in &apos;git crime&apos;.
     </description>
   <author email="hi.tekchup@gmail.com" href="http://tekchup.com/">
-      Your Name Here
+      Tekchup
     </author>
   <content src="index.html"/>
   <access origin="*"/>

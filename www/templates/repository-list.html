@@ -1,16 +1,12 @@
-<ion-content>
-  <ion-refresher pulling-text="Pull to refresh..." on-refresh="refreshList()">
-  </ion-refresher>
-  <div class="list">
-    <a ng-repeat="repo in repositories" class="item item-thumbnail-left item-icon-right" ng-click="openRepository(repo.html_url)">
-      <img src="{{repo.owner.avatar_url}}">
-      <h2>{{repo.full_name}}</h2>
-      <p>{{repo.description}}</p>
-      <p>
-        <span style="margin-right:10px;">{{repo.stargazers_count}} stars</span>
-        <span>{{repo.forks_count}} forks</span>
-      </p>
-      <i class="icon" ng-class="getFavoriteIcon(repo.id)" ng-click="toggleFavorite($event, repo.id)"></i>
-    </a>
-  </div>
-</ion-content>
+<div class="list">
+  <a ng-repeat="repo in repositories" class="item item-thumbnail-left item-icon-right" ng-click="openRepository(repo.html_url)">
+    <img src="{{repo.owner.avatar_url}}">
+    <h2>{{repo.full_name}}</h2>
+    <p>{{repo.description}}</p>
+    <p>
+      <span style="margin-right:10px;">{{repo.stargazers_count}} stars</span>
+      <span>{{repo.forks_count}} forks</span>
+    </p>
+    <i class="icon" ng-class="getFavoriteIcon(repo)" ng-click="toggleFavorite($event, repo)"></i>
+  </a>
+</div>

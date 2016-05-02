@@ -1,22 +1,13 @@
 angular.module('ghtrending.directives', [])
-	.directive('repositoryList', ["repositoriesService", "repositoriesData", "$cordovaInAppBrowser", "loadMask", "$rootScope", "favorites",
-		function(repositoriesService, repositoriesData, $cordovaInAppBrowser, loadMask, $rootScope, favorites) {
+	.directive('repositoryList', ["$cordovaInAppBrowser", "loadMask", "$rootScope", "favorites",
+		function($cordovaInAppBrowser, loadMask, $rootScope, favorites) {
 		return {
 			restrict: "E",
 			templateUrl: "templates/repository-list.html",
 			scope: {
-				timeScale: "@"
+				repositories: '='
 			},
 			controller: function($scope) {
-				function fetchData() {
-					repositoriesService.getPopularRepositories($scope.timeScale).then(function(data) {
-				          repositoriesData.setRepositoriesData(data);
-				          if (repositoriesData.getRepositoriesCount() > 0)
-				            $scope.repositories = repositoriesData.getRepositoriesDetails();
-				          else
-				            $scope.repositories = [];
-				      });
-				}
 
 				$scope.openRepository = function(url) {
 			          var options = {
@@ -29,43 +20,63 @@ angular.module('ghtrending.directives', [])
 			          }).catch(function(e) {
 			              console.error("Error opening URL " + url + " : " + e);
 			          });
-			          /*$rootScope.$on('$cordovaInAppBrowser:loadstart', function(e, event) {
-			          		loadstart.show();
+			          $rootScope.$on('$cordovaInAppBrowser:loadstart', function(e, event) {
+			          		loadMask.show();
 			          });
 			          $rootScope.$on('$cordovaInAppBrowser:loadstop', function(e, event) {
-			          		loadstart.hide();
-			          });*/
+			          		loadMask.hide();
+			          });
 			      };
 
-			      $scope.refreshList = function() {
-			      		fetchData();
+			      $scope.isFavorite = function(repo) {
+			      		return favorites.contains(repo);
 			      };
 
-			      $scope.isFavorite = function(repoId) {
-			      		$scope.favorites = favorites.getAll();
-			      		return ($scope.favorites.indexOf(repoId) != -1);
-			      };
-
-			      $scope.toggleFavorite = function(event, repoId) {
+			      $scope.toggleFavorite = function(event, repo) {
 			      		event.preventDefault();
 			      		event.stopPropagation();
-			      		if ($scope.isFavorite(repoId))
-			      			favorites.remove(repoId);
+			      		if ($scope.isFavorite(repo))
+			      			favorites.remove(repo);
 			      		else
-			      			favorites.add(repoId);
+			      			favorites.add(repo);
 			      };
 
-			      $scope.getFavoriteIcon = function(repoId) {
-			      		if ($scope.isFavorite(repoId))
+			      $scope.getFavoriteIcon = function(repo) {
+			      		if ($scope.isFavorite(repo))
 			      			return "ion-ios-heart icon-assertive";
 			      		else
 			      			return "ion-ios-heart-outline";
 			      };
-
-			      fetchData();
 			},
 			link: function(scope, elem, attr, ctrl) {
 
+			}
+		};
+	}])
+
+	.directive("topProjects", ["repositoriesService", "repositoriesData", function(repositoriesService, repositoriesData){
+		return {
+			restrict: "E",
+			templateUrl: "templates/top-projects.html",
+			scope: {
+				timeScale: "@",
+			},
+			controller: function($scope) {
+				function fetchData() {
+					repositoriesService.getPopularRepositories($scope.timeScale).then(function(data) {
+				          repositoriesData.setRepositoriesData(data);
+				          if (repositoriesData.getRepositoriesCount() > 0)
+				            $scope.repositories = repositoriesData.getRepositoriesDetails();
+				          else
+				            $scope.repositories = [];
+				      });
+				}
+
+				$scope.refreshList = function() {
+			    	fetchData();
+			    };
+
+			    fetchData();
 			}
 		};
 	}]);

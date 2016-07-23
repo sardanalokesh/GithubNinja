@@ -60,10 +60,11 @@ angular.module('ghtrending.directives', [])
 			templateUrl: "templates/top-projects.html",
 			scope: {
 				timeScale: "@",
+				language: '='
 			},
 			controller: function($scope) {
 				function fetchData() {
-					repositoriesService.getPopularRepositories($scope.timeScale).then(function(data) {
+					repositoriesService.getPopularRepositories($scope.timeScale, $scope.language).then(function(data) {
 				          repositoriesData.setRepositoriesData(data);
 				          if (repositoriesData.getRepositoriesCount() > 0)
 				            $scope.repositories = repositoriesData.getRepositoriesDetails();
@@ -72,11 +73,9 @@ angular.module('ghtrending.directives', [])
 				      });
 				}
 
-				$scope.refreshList = function() {
-			    	fetchData();
-			    };
+				$scope.refreshList = fetchData;
 
-			    fetchData();
+			    $scope.$watch('language', fetchData);
 			}
 		};
 	}]);

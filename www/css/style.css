@@ -7,3 +7,7 @@
 .icon-assertive {
 	color: #ef473a;
 }
+
+button.ion-funnel:before {
+	font-size: 25px !important;
+}

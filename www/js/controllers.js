@@ -1,7 +1,7 @@
 angular.module('ghtrending.controllers', [])
 
 
-  .controller('AppCtrl', ["$scope", "$cordovaSocialSharing", function($scope, $cordovaSocialSharing) {
+  .controller('AppCtrl', ["$scope", "$cordovaSocialSharing", "$ionicPopover", "repositoriesService", function($scope, $cordovaSocialSharing, $ionicPopover, repositoriesService) {
 
   	$scope.share = function() {
   		var appUrl = "https://play.google.com/store/apps/details?id=com.tekchup.ninjahub";
@@ -16,6 +16,28 @@ angular.module('ghtrending.controllers', [])
 	    });
   	};
 
+    $ionicPopover.fromTemplateUrl('templates/lang-filter.html', {
+      scope: $scope,
+    }).then(function(popover) {
+      $scope.popover = popover;
+    });
+
+    $scope.closePopover = function() {
+      $scope.popover.hide();
+    };
+    //Cleanup the popover when we're done with it!
+    $scope.$on('$destroy', function() {
+      $scope.popover.remove();
+    });
+
+    $scope.languages = ["All", "Javascript", "Java", "Python", "CSS", "PHP", "Ruby", "C++", "C", "Shell", "C#", "Objective-C", "R", "VimL", "GO", "Perl", "CoffeeScript", "TeX", "Swift", "Scala", "Emacs Lisp", "Haskell", "Lua", "Clojure", "Matlab", "Arduino", "Makefile", "Groovy", "Puppet", "Rust", "PowerShell"];
+    $scope.selectedLanguage = "All";
+    
+    $scope.selectLanguage = function(lang) {
+      $scope.selectedLanguage = lang;
+      $scope.closePopover();
+    };
+
   }])
 
   .controller('HomeCtrl', ["$ionicTabsDelegate", function($ionicTabsDelegate) {
@@ -26,6 +48,8 @@ angular.module('ghtrending.controllers', [])
       favorites.registerObserver(function() {
           $scope.favorites = favorites.all();
       });
+
+
   }])
 ;
 

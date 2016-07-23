@@ -8,6 +8,10 @@
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
         </button>
       </ion-nav-buttons>
+      <ion-nav-buttons side="right">
+        <button class="button button-icon button-clear ion-funnel" ng-click="popover.show($event)">
+        </button>
+      </ion-nav-buttons>
     </ion-nav-bar>
     <ion-nav-view name="menu-content"></ion-nav-view>
   </ion-side-menu-content>
@@ -34,3 +38,15 @@
     </ion-content>
   </ion-side-menu>
 </ion-side-menus>
+
+<script id="templates/lang-filter.html" type="text/ng-template">
+  <ion-popover-view>
+    <ion-content>
+      <div class="list">
+        <a class="item" ng-repeat="lang in languages track by $index" ng-click="selectLanguage(lang)">
+          {{lang}}
+        </a>
+      </div>
+    </ion-content>
+  </ion-popover-view>
+</script>

@@ -31,7 +31,7 @@ angular.module('ghtrending.services', [])
 	    }
 
 	    return {
-	        getPopularRepositories: function(timeScale) {
+	        getPopularRepositories: function(timeScale, language) {
 	        	loadMask.show();
 	            var url = REPO_SEARCH;
 	            var searchDate = new Date();
@@ -48,7 +48,11 @@ angular.module('ghtrending.services', [])
 		              searchDate.setYear(searchDate.getYear() - 1);
 		            query = "created:>" + searchDate.toISOString();
 	            }
-	            url += "?q="+query+"&sort=stars&order=desc";
+
+	            if (language && language != 'All')
+	            	url += "?q="+query+"+language:"+language.toLowerCase()+"&sort=stars&order=desc";
+	            else
+	            	url += "?q="+query+"&sort=stars&order=desc";
 	            return processAjaxRequest(url);
 	        }
 	    };

@@ -63,19 +63,24 @@ angular.module('ghtrending.directives', [])
 				language: '='
 			},
 			controller: function($scope) {
-				function fetchData() {
-					repositoriesService.getPopularRepositories($scope.timeScale, $scope.language).then(function(data) {
+				function fetchData(noLoadMask) {
+					repositoriesService.getPopularRepositories($scope.timeScale, $scope.language, noLoadMask).then(function(data) {
 				          repositoriesData.setRepositoriesData(data);
 				          if (repositoriesData.getRepositoriesCount() > 0)
 				            $scope.repositories = repositoriesData.getRepositoriesDetails();
 				          else
 				            $scope.repositories = [];
+				          $scope.$broadcast('scroll.refreshComplete');
+				      }, function() {
+				      	  $scope.$broadcast('scroll.refreshComplete');
 				      });
 				}
 
 				$scope.refreshList = fetchData;
 
-			    $scope.$watch('language', fetchData);
+			    $scope.$watch('language', function() {
+			    	fetchData();
+			    });
 			}
 		};
 	}]);

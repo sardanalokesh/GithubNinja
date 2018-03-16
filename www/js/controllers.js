@@ -4,7 +4,7 @@ angular.module('ghtrending.controllers', [])
   .controller('AppCtrl', ["$scope", "$cordovaSocialSharing", "$ionicPopover", "repositoriesService", function($scope, $cordovaSocialSharing, $ionicPopover, repositoriesService) {
 
   	$scope.share = function() {
-  		var appUrl = "https://play.google.com/store/apps/details?id=com.tekchup.ninjahub";
+  		var appUrl = "https://play.google.com/store/apps/details?id=com.tekchup.ninjagithub";
   		var message = "Hi, I would like you to try this awesome app!";
   		var subject = "Hi";
   		$cordovaSocialSharing

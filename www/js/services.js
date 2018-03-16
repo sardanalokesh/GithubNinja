@@ -4,7 +4,7 @@ angular.module('ghtrending.services', [])
 	    var ROOT_API = "https://api.github.com";
 	    var REPO_SEARCH = ROOT_API + "/search/repositories";
 	  
-	    function processAjaxRequest(url) {
+	    function processAjaxRequest(url, noLoadMask) {
 	        var deffered=$q.defer();
 	        $http({
 	            method: "get",
@@ -23,30 +23,50 @@ angular.module('ghtrending.services', [])
 	            deffered.reject(error);
 	        });
 	        deffered.promise.then(function() {
-	        	loadMask.hide();
+	        	if (!noLoadMask)
+	        		loadMask.hide();
 	        }).catch(function() {
-	        	loadMask.hide();
+	        	if (!noLoadMask)
+	        		loadMask.hide();
 	        });
 	        return deffered.promise;
 	    }
 
+	    function getISODate(d) {
+	    	return d.getUTCFullYear() +
+		        '-' + pad(d.getUTCMonth() + 1) +
+		        '-' + pad(d.getUTCDate()) +
+		        'T' + pad(d.getUTCHours()) +
+		        ':' + pad(d.getUTCMinutes()) +
+		        ':' + pad(d.getUTCSeconds()) + 
+		        'Z';
+	    }
+
+	    function pad(number) {
+	      if (number < 10) {
+	        return '0' + number;
+	      }
+	      return number;
+	    }
+
 	    return {
-	        getPopularRepositories: function(timeScale, language) {
-	        	loadMask.show();
+	        getPopularRepositories: function(timeScale, language, noLoadMask) {
+	        	if(!noLoadMask)
+	        		loadMask.show();
 	            var url = REPO_SEARCH;
 	            var searchDate = new Date();
 	            var query;
 	            if (timeScale == "overall") {
-	            	searchDate.setYear(searchDate.getYear() - 1);
-	            	query = "pushed:>" + searchDate.toISOString();
+	            	searchDate.setFullYear(searchDate.getFullYear() - 1);
+	            	query = "pushed:>" + getISODate(searchDate);
 	            } else {
 	            	if (timeScale == "weekly")
 		              searchDate.setDate(searchDate.getDate() - 7);
 		            else if (timeScale == "monthly")
 		              searchDate.setMonth(searchDate.getMonth() - 1);
 		            else if (timeScale == "yearly")
-		              searchDate.setYear(searchDate.getYear() - 1);
-		            query = "created:>" + searchDate.toISOString();
+		              searchDate.setFullYear(searchDate.getFullYear() - 1);
+		            query = "created:>" + getISODate(searchDate);
 	            }
 
 	            if (language && language != 'All')
